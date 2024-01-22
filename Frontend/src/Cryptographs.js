@@ -13,15 +13,13 @@ function CryptoGraphs() {
         borderColor: 'blue',
         fill: false,
       },
-    
-      // Add more datasets for other data streams
     ],
   });
 
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const apiKey = '2bef53cce2bbcf3a5f288ac7215437101d6159c792f8743e1b2c2c568d6a608c'; // Replace with your API key
+    const apiKey = '2bef53cce2bbcf3a5f288ac7215437101d6159c792f8743e1b2c2c568d6a608c';
     const websocketURL = `wss://streamer.cryptocompare.com/v2?api_key=${apiKey}`;
     const newSocket = new WebSocket(websocketURL);
 
@@ -29,14 +27,12 @@ function CryptoGraphs() {
       console.log('WebSocket opened:', event);
       setSocket(newSocket);
 
-      // Create and send subscription messages to subscribe to different channels
       const subscriptions = [
         '5~CCCAGG~BTC~USD',
         // '0~Coinbase~ETH~USD',
         // Add more subscriptions for other data streams
       ];
 
-      // Add more subscriptions for other data streams
       subscriptions.forEach((sub) => {
         newSocket.send(JSON.stringify({
           action: 'SubAdd',
@@ -47,21 +43,22 @@ function CryptoGraphs() {
 
     newSocket.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
-    
+
       const data = JSON.parse(event.data);
-      const currentDate = new Date().toLocaleTimeString();  // Get the current date and time
-    
-      // Use the current date instead of the timestamp
+      const currentDateTime = new Date().toLocaleString();
+
       const priceData = {
-        timestamp: currentDate,
+        timestamp: currentDateTime,
         price: data.PRICE,
         symbol: data.FROMSYMBOL === 'BTC' ? 'Bitcoin' : 'Ethereum',
       };
-    
-      // Update the state
-      setCryptoData((prevData) => [...prevData, priceData]);
+
+      setCryptoData((prevData) => {
+        const newData = [...prevData, priceData].slice(-8); // Keep only the latest 10 points
+        setChartDataFromCryptoData(newData);
+        return newData;
+      });
     };
-    
 
     newSocket.onerror = (event) => {
       console.error('WebSocket error:', event);
@@ -72,17 +69,15 @@ function CryptoGraphs() {
         socket.close();
       }
     };
+
   }, []); // Empty dependency array to open the WebSocket once
 
-  useEffect(() => {
-    if (cryptoData.length > 0) {
-      const labels = cryptoData.map((data) => data.timestamp);
-      const bitcoinPrices = cryptoData
-        .filter((data) => data.symbol === 'Bitcoin')
-        .map((data) => data.price);
-      const ethereumPrices = cryptoData
-        .filter((data) => data.symbol === 'Ethereum')
-        .map((data) => data.price);
+  const setChartDataFromCryptoData = (data) => {
+    if (data.length > 0) {
+      const labels = data.map((item) => item.timestamp);
+      const bitcoinPrices = data
+        .filter((item) => item.symbol === 'Bitcoin')
+        .map((item) => item.price);
 
       setChartData({
         labels,
@@ -93,17 +88,10 @@ function CryptoGraphs() {
             borderColor: 'green',
             fill: false,
           },
-          {
-            label: 'Ethereum Price (USD)',
-            data: ethereumPrices,
-            borderColor: 'red',
-            fill: false,
-          },
-          // Add more datasets for other data streams
         ],
       });
     }
-  }, [cryptoData]);
+  };
 
   return (
     <div>
