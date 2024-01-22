@@ -13,23 +13,25 @@ import RiskWarning from './Risk/Risk'
 import Help from './help/Help'
 import CryptoData from './cryptoData/CryptoData'
 
+
+
 const App = () => {
   return (
-    <div className='App'>
-  {/* <CryptoGraphs/>       */}
+    <div className='App'>     
   {/* <Services/>
   <CryptoWidget/>
   <RealTimeData/> */}
   
   
   <Navbar/>
-  <Broadcast/>
-  <Headsection/>
-  <CryptoData/>
-  <Services/>
-  <Help/>
-  <RiskWarning/>
-  <Footer/>
+  <CryptoGraphs/> 
+  {/* <Broadcast/> */}
+  {/* <Headsection/> */}
+  {/* <CryptoData/> */}
+  {/* <Services/> */}
+  {/* <Help/> */}
+  {/* <RiskWarning/> */}
+  {/* <Footer/> */}
 
 
 

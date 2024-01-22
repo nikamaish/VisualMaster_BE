@@ -47,25 +47,21 @@ function CryptoGraphs() {
 
     newSocket.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
-
+    
       const data = JSON.parse(event.data);
-      const timestamp = new Date(data.TS * 1000).toLocaleTimeString();
-      const price = data.PRICE;
-
-      // Update the corresponding dataset based on the data stream
-      if (data.FROMSYMBOL === 'BTC') {
-        setCryptoData((prevData) => [
-          ...prevData,
-          { timestamp, price, symbol: 'Bitcoin' },
-        ]);
-      // } else if (data.FROMSYMBOL === 'ETH') {
-      //   setCryptoData((prevData) => [
-      //     ...prevData,
-      //     { timestamp, price, symbol: 'Ethereum' },
-      //   ]);
-      }
-      // Add more conditions for other data streams
+      const currentDate = new Date().toLocaleTimeString();  // Get the current date and time
+    
+      // Use the current date instead of the timestamp
+      const priceData = {
+        timestamp: currentDate,
+        price: data.PRICE,
+        symbol: data.FROMSYMBOL === 'BTC' ? 'Bitcoin' : 'Ethereum',
+      };
+    
+      // Update the state
+      setCryptoData((prevData) => [...prevData, priceData]);
     };
+    
 
     newSocket.onerror = (event) => {
       console.error('WebSocket error:', event);
@@ -94,7 +90,7 @@ function CryptoGraphs() {
           {
             label: 'Bitcoin Price (USD)',
             data: bitcoinPrices,
-            borderColor: 'blue',
+            borderColor: 'green',
             fill: false,
           },
           {
