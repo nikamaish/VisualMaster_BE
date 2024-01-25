@@ -12,6 +12,7 @@ import Footer from './Footer/Footer'
 import RiskWarning from './Risk/Risk'
 import Help from './help/Help'
 import CryptoData from './cryptoData/CryptoData'
+import CryptoRest from './CryptoRest'
 
 
 
@@ -24,7 +25,7 @@ const App = () => {
   
   
   <Navbar/>
-  <CryptoGraphs/> 
+  {/* <CryptoGraphs/>  */}
   {/* <Broadcast/> */}
   {/* <Headsection/> */}
   {/* <CryptoData/> */}
@@ -32,6 +33,7 @@ const App = () => {
   {/* <Help/> */}
   {/* <RiskWarning/> */}
   {/* <Footer/> */}
+  <CryptoRest/>
 
 
 
